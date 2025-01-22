@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
@@ -24,9 +25,9 @@ const Maps = () => {
 
   return (
     <MapContainer
-      center={[37.7749, -122.4194]} // Example center (San Francisco)
+      center={[19.07609, 72.877426]}
       zoom={10}
-      style={{ height: "400px", width: "100%" }}
+      style={{ height: "500px", width: "100%" }}
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
