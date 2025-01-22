@@ -6,6 +6,8 @@ const RecipientSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   phone: { type: String, required: true },
   location: { type: String, required: true },
+  latitude: { type: Number, required: true },
+  longitude: { type: Number, required: true },
   password: { type: String, required: true },
   role: { type: String, enum: ["recipient"], default: "recipient" },
 });

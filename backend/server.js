@@ -23,6 +23,7 @@ mongoose
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/donors", require("./routes/donor"));
 app.use("/api/recipients", require("./routes/recipient"));
+app.use("/api/locations", require("./routes/locations"));
 
 // Start Server
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

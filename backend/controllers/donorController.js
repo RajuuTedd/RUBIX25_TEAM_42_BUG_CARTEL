@@ -12,8 +12,16 @@ exports.getAllDonors = async (req, res) => {
 
 // Add a new donor
 exports.addDonor = async (req, res) => {
-  const { organizationName, ownerName, email, phone, location, password } =
-    req.body;
+  const {
+    organizationName,
+    ownerName,
+    email,
+    phone,
+    location,
+    latitude,
+    longitude,
+    password,
+  } = req.body;
 
   try {
     const donor = new Donor({
@@ -22,6 +30,8 @@ exports.addDonor = async (req, res) => {
       email,
       phone,
       location,
+      latitude,
+      longitude,
       password,
     });
     await donor.save();

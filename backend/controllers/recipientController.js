@@ -12,8 +12,16 @@ exports.getAllRecipients = async (req, res) => {
 
 // Add a new recipient
 exports.addRecipient = async (req, res) => {
-  const { organizationName, contactPerson, email, phone, location, password } =
-    req.body;
+  const {
+    organizationName,
+    contactPerson,
+    email,
+    phone,
+    location,
+    latitude,
+    longitude,
+    password,
+  } = req.body;
 
   try {
     const recipient = new Recipient({
@@ -22,6 +30,8 @@ exports.addRecipient = async (req, res) => {
       email,
       phone,
       location,
+      latitude,
+      longitude,
       password,
     });
     await recipient.save();
