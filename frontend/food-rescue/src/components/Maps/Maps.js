@@ -1,45 +1,64 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import L from "leaflet";
+import React from "react";
+import { MapContainer, TileLayer, Marker, Popup, Tooltip } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import L from "leaflet";
 
-// Fix for default marker icons in Leaflet
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
-  iconUrl: require("leaflet/dist/images/marker-icon.png"),
-  shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
+// Custom Marker Icons
+const customIcon1 = L.icon({
+  iconUrl:
+    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png", // Red marker
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+  shadowSize: [41, 41],
+});
+
+const customIcon2 = L.icon({
+  iconUrl:
+    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png", // Green marker
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+  shadowSize: [41, 41],
 });
 
 const Maps = () => {
-  const [donors, setDonors] = useState([]);
+  // Coordinates for two locations in Mumbai
+  const marker1 = [19.076, 72.8777]; // Mumbai Central
+  const marker2 = [18.975, 72.8258]; // Colaba, Mumbai
 
-  useEffect(() => {
-    // Fetch donors from the backend
-    axios
-      .get("/api/donors")
-      .then((response) => setDonors(response.data))
-      .catch((error) => console.error(error));
-  }, []);
+  // Calculate the bounding box that includes all markers
+  const bounds = L.latLngBounds([marker1, marker2]);
 
   return (
     <MapContainer
-      center={[19.07609, 72.877426]}
-      zoom={10}
-      style={{ height: "500px", width: "100%" }}
+      bounds={bounds} // Set the bounds to include all markers
+      style={{ height: "100%", width: "100%" }}
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
-      {donors.map((donor) => (
-        <Marker key={donor._id} position={[donor.latitude, donor.longitude]}>
-          <Popup>
-            {donor.organizationName} <br /> {donor.location}
-          </Popup>
-        </Marker>
-      ))}
+
+      {/* Marker 1 in Mumbai */}
+      <Marker position={marker1} icon={customIcon1}>
+        <Tooltip>Donor</Tooltip> {/* Tooltip for Donor */}
+        <Popup>
+          Marker 1: Mumbai Central <br /> A busy area in Mumbai.
+        </Popup>
+      </Marker>
+
+      {/* Marker 2 in Mumbai */}
+      <Marker position={marker2} icon={customIcon2}>
+        <Tooltip>Recipient</Tooltip> {/* Tooltip for Recipient */}
+        <Popup>
+          Marker 2: Colaba <br /> A popular tourist spot in Mumbai.
+        </Popup>
+      </Marker>
     </MapContainer>
   );
 };

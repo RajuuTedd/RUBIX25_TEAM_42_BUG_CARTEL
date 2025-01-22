@@ -7,12 +7,22 @@ function App() {
     <div className="App">
       {/* Navigation Bar */}
       <nav className="navbar">
-        <h1>Food Rescue Platform</h1>
-        <div className="nav-buttons">
-          <button className="nav-button">Home</button>
-          <button className="nav-button">Donors</button>
-          <button className="nav-button">Recipients</button>
-          <button className="nav-button">Volunteers</button>
+        <div className="navbar-content">
+          <h1 className="navbar-title">Food Rescue Platform</h1>
+          <div className="search-container">
+            <input
+              type="text"
+              placeholder="Search location..."
+              className="search-bar"
+            />
+            <button className="search-button">Search</button>
+          </div>
+          <div className="nav-buttons">
+            <button className="nav-button">Home</button>
+            <button className="nav-button">Donors</button>
+            <button className="nav-button">Recipients</button>
+            <button className="nav-button">Volunteers</button>
+          </div>
         </div>
       </nav>
 

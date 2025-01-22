@@ -1,23 +1,70 @@
 /* General Styles */
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
 /* Navigation Bar */
 .navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  background-color: #2c3e50;
   padding: 10px 20px;
-  background-color: #4caf50;
-  color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative; /* Ensure navbar stays in place */
+  z-index: 1000; /* Higher z-index to keep navbar above the map */
 }
 
-.navbar h1 {
-  margin: 0;
+.navbar-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.navbar-title {
+  color: #ecf0f1;
   font-size: 24px;
+  margin: 0;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  margin: 0 20px;
+}
+
+.search-bar {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 400px;
+  margin-right: 10px;
+  font-size: 16px;
+}
+
+.search-button {
+  padding: 10px 20px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: #2980b9;
 }
 
 .nav-buttons {
@@ -26,21 +73,53 @@ body {
 }
 
 .nav-button {
-  padding: 8px 16px;
-  background-color: #45a049;
+  padding: 10px 20px;
+  background-color: #3498db;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
 }
 
 .nav-button:hover {
-  background-color: #3d8b40;
+  background-color: #2980b9;
 }
 
-/* Full-Page Map */
+/* Map Container */
 .map-container {
-  height: calc(100vh - 60px); /* Full height minus navbar height */
+  flex: 1;
+  background-color: #e0e0e0;
+  position: relative;
+  z-index: 1; /* Lower z-index to keep map below navbar */
+}
+
+/* Marker Styling (if using Leaflet) */
+.leaflet-marker-icon {
+  background-color: #e74c3c;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Ensure markers are visible */
+.leaflet-container {
   width: 100%;
+  height: 100%;
+}
+/* Custom Tooltip Styles */
+.leaflet-tooltip {
+  background-color: #2c3e50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-family: "Segoe UI", sans-serif;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.leaflet-tooltip:before {
+  border-top-color: #2c3e50; /* Match the tooltip background color */
 }
