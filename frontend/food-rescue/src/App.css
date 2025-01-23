@@ -123,3 +123,8 @@ body {
 .leaflet-tooltip:before {
   border-top-color: #2c3e50; /* Match the tooltip background color */
 }
+.map-container {
+  height: calc(100vh - 80px); /* Full height minus navbar height */
+  width: 100%;
+  position: relative;
+}
