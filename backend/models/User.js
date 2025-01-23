@@ -5,9 +5,9 @@ const UserSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   phone: { type: String, required: true },
-  location: { type: String, required: true },
-  latitude: { type: Number, required: true },
-  longitude: { type: Number, required: true },
+  location: { type: String,  },
+  latitude: { type: Number,  },
+  longitude: { type: Number,  },
   role: { type: String, enum: ["volunteer"], default: "volunteer" },
 });
 

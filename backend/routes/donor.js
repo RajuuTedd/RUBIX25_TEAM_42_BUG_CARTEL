@@ -6,7 +6,7 @@ router.get("/", (req, res) => {
 });
 // Get all donors
 router.get("/", donorController.getAllDonors);
-
+router.get("/:id", donorController.getDonorById);
 // Add a new donor
 router.post("/", donorController.addDonor);
 

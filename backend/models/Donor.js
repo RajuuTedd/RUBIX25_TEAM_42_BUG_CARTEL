@@ -5,9 +5,9 @@ const DonorSchema = new mongoose.Schema({
   ownerName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   phone: { type: String, required: true },
-  location: { type: String, required: true },
-  latitude: { type: Number, required: true },
-  longitude: { type: Number, required: true },
+  location: { type: String,  },
+  latitude: { type: Number,  },
+  longitude: { type: Number,  },
   password: { type: String, required: true },
   role: { type: String, enum: ["donor"], default: "donor" },
 });

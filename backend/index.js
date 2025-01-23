@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const router = require("./routes/auth.js");
 require("dotenv").config();
 
 const app = express();
@@ -20,7 +21,41 @@ mongoose
   .catch((err) => console.log(err));
 
 // Routes
-app.use("/api/auth", require("./routes/auth"));
+const donationSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  foodType: { type: String, required: true },
+  quantity: { type: Number, required: true },
+  address: { type: String, required: true },
+  contact: { type: String, required: true },
+  date: { type: Date, required: true },
+  isAvailable:{type:Boolean}
+});
+
+// Donation Model
+const Donation = mongoose.model('Donation', donationSchema);
+
+// Routes
+app.post('/donate', async (req, res) => {
+  try {
+    const donation = new Donation(req.body);
+    await donation.save();
+    res.status(201).send({ message: 'Donation successfully saved!' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: 'Failed to save donation' });
+  }
+});
+
+app.get('/donations', async (req, res) => {
+  try {
+    const donations = await Donation.find();
+    res.status(200).send(donations);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: 'Failed to fetch donations' });
+  }
+});
+app.use("/api/auth", router);
 app.use("/api/donors", require("./routes/donor"));
 app.use("/api/recipients", require("./routes/recipient"));
 app.use("/api/locations", require("./routes/locations"));
