@@ -12,7 +12,7 @@ app.use(express.json());
 
 // MongoDB Connection
 mongoose
-  .connect(process.env.MONGO_URI, {
+  .connect(process.env.MONGO_URI||"mongodb://localhost:27017/feed", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

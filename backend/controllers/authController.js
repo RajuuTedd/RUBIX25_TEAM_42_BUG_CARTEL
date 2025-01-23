@@ -7,7 +7,6 @@ const jwt = require("jsonwebtoken");
 // Register a new user (volunteer, donor, or recipient)
 exports.register = async (req, res) => {
   const { name, email, password, phone, location, role } = req.body;
-
   try {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
