@@ -1,14 +1,43 @@
-import React, { useState } from 'react';
-import { Map, User, Settings, Phone, Search } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Map, User, Settings, Phone, Search, PlusCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
   const [searchRadius, setSearchRadius] = useState(3);
+  const [userRole, setUserRole] = useState(null); // Stores the role of the user (donor or recruiter)
   const [nearbyUsers] = useState([
     { id: 1, name: 'John Doe', distance: '0.5 km' },
     { id: 2, name: 'Jane Smith', distance: '1.2 km' },
     { id: 3, name: 'Mike Johnson', distance: '2.1 km' },
     { id: 4, name: 'Sarah Williams', distance: '2.8 km' },
   ]);
+  const navigate=useNavigate()
+  useEffect(() => {
+    // Retrieve token and decode role from localStorage
+    const token = localStorage.getItem('token');
+    if (token) {
+      // Assume the token is a JSON Web Token (JWT) with the payload containing a "role" field
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
+        setUserRole(payload.role); // Example roles: 'donor' or 'recruiter'
+      } catch (err) {
+        console.error('Invalid token:', err);
+        setUserRole(null);
+      }
+    }
+  }, []);
+
+  const handleDonateClick = () => {
+    alert('Navigate to Donate Page');
+    navigate('/donate')
+    // Logic to navigate to the donate page
+  };
+
+  const handleTakeFoodClick = () => {
+    alert('Navigate to Take Food Page');
+    navigate('/dona')
+    // Logic to navigate to the take food page
+  };
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -24,7 +53,7 @@ const Dashboard = () => {
               <p className="text-sm text-gray-500">Online</p>
             </div>
           </div>
-          
+
           <nav className="space-y-4">
             <button className="flex items-center gap-3 w-full p-3 rounded hover:bg-gray-100">
               <Map size={20} />
@@ -38,6 +67,24 @@ const Dashboard = () => {
               <Phone size={20} />
               <span>Contact</span>
             </button>
+            {userRole === 'donor' && (
+              <button
+                onClick={handleDonateClick}
+                className="flex items-center gap-3 w-full p-3 rounded hover:bg-gray-100"
+              >
+                <PlusCircle size={20} />
+                <span>Donate Food</span>
+              </button>
+            )}
+            {userRole === 'recipient' && (
+              <button
+                onClick={handleTakeFoodClick}
+                className="flex items-center gap-3 w-full p-3 rounded hover:bg-gray-100"
+              >
+                <PlusCircle size={20} />
+                <span>Take Food</span>
+              </button>
+            )}
           </nav>
         </div>
       </div>
@@ -48,8 +95,11 @@ const Dashboard = () => {
         <div className="w-80 bg-white shadow-lg p-6">
           <h2 className="text-xl font-semibold mb-4">Nearby Users</h2>
           <div className="space-y-4">
-            {nearbyUsers.map(user => (
-              <div key={user.id} className="p-4 border rounded hover:bg-gray-50">
+            {nearbyUsers.map((user) => (
+              <div
+                key={user.id}
+                className="p-4 border rounded hover:bg-gray-50"
+              >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
                     <User size={20} />
@@ -88,12 +138,18 @@ const Dashboard = () => {
                     min="0"
                     max="10"
                   />
-                  <Search className="absolute left-3 top-2.5 text-gray-400" size={20} />
+                  <Search
+                    className="absolute left-3 top-2.5 text-gray-400"
+                    size={20}
+                  />
                 </div>
               </div>
-              <button className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                Search
-              </button>
+              <button
+      className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+      
+    >
+      Search
+    </button>
             </div>
           </div>
         </div>

@@ -1,74 +1,70 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const DietaryOptions = [
-  'Vegetarian', 
-  'Vegan', 
-  'Gluten-Free', 
-  'Dairy-Free', 
-  'Kosher', 
-  'Halal'
+  "Vegetarian",
+  "Vegan",
+  "Gluten-Free",
+  "Dairy-Free",
+  "Kosher",
+  "Halal",
 ];
 
 const SignupForm = () => {
-  const [signupType, setSignupType] = useState('donor');
+  const navigate =useNavigate();
+  const [signupType, setSignupType] = useState("donor");
   const [formData, setFormData] = useState({
-    fullName: '',
-    phoneNumber: '',
-    emailAddress: '',
-    contactMethod: 'email'
+    fullName: "",
+    phoneNumber: "",
+    emailAddress: "",
+    password: "",
+    location: "",
+    contactMethod: "email",
   });
   const [errors, setErrors] = useState({});
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
-  };
-
-  const handleCheckboxChange = (e) => {
-    const { name, checked, value } = e.target;
-    setFormData(prev => {
-      const currentValues = prev[name] || [];
-      return {
-        ...prev,
-        [name]: checked 
-          ? [...currentValues, value]
-          : currentValues.filter(item => item !== value)
-      };
-    });
   };
 
   const validateForm = () => {
     const newErrors = {};
-    
-    if (!formData.fullName) newErrors.fullName = 'Full Name is required';
-    if (!formData.phoneNumber) newErrors.phoneNumber = 'Phone Number is required';
-    if (!formData.emailAddress) newErrors.emailAddress = 'Email Address is required';
-
-    if (signupType === 'donor' && !formData.accountType) {
-      newErrors.accountType = 'Account Type is required';
-    }
-
-    if (signupType === 'recipient' && !formData.organizationType) {
-      newErrors.organizationType = 'Organization Type is required';
-    }
+    if (!formData.fullName) newErrors.fullName = "Full Name is required";
+    if (!formData.phoneNumber) newErrors.phoneNumber = "Phone Number is required";
+    if (!formData.emailAddress) newErrors.emailAddress = "Email Address is required";
+    if (!formData.password) newErrors.password = "Password is required";
+    if (!formData.location) newErrors.location = "Location is required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
+      const payload = {
+        name: formData.fullName,
+        email: formData.emailAddress,
+        password: formData.password,
+        phone: formData.phoneNumber,
+        location: formData.location,
+        role: signupType,
+      };
+
       try {
-        console.log('Signup Data:', formData);
-        alert('Signup Successful!');
-      } catch (error) {
-        console.error('Signup Error:', error);
-        alert('Signup Failed');
+        const response = await axios.post("http://localhost:5000/api/auth/register", payload);
+        alert("Signup Successful!");
+        console.log("Signup Response:", response.data);
+        navigate("/login");
+      } catch (err) {
+        console.error("Signup Error:", err.response?.data || err.message);
+        alert("Signup Failed. Please try again.");
       }
     }
   };
@@ -81,25 +77,25 @@ const SignupForm = () => {
             Food Rescue Platform Registration
           </h1>
         </div>
-        
+
         <div className="p-6">
           <div className="grid grid-cols-2 gap-2 bg-gray-100 rounded-xl p-1 mb-6 shadow-inner">
             <button
-              onClick={() => setSignupType('donor')}
+              onClick={() => setSignupType("donor")}
               className={`flex items-center justify-center py-3 rounded-lg transition-all duration-300 ${
-                signupType === 'donor' 
-                  ? 'bg-white shadow-md text-emerald-600 scale-105' 
-                  : 'text-gray-600 hover:bg-gray-200'
+                signupType === "donor"
+                  ? "bg-white shadow-md text-emerald-600 scale-105"
+                  : "text-gray-600 hover:bg-gray-200"
               }`}
             >
               Donor
             </button>
             <button
-              onClick={() => setSignupType('recipient')}
+              onClick={() => setSignupType("recipient")}
               className={`flex items-center justify-center py-3 rounded-lg transition-all duration-300 ${
-                signupType === 'recipient' 
-                  ? 'bg-white shadow-md text-emerald-600 scale-105' 
-                  : 'text-gray-600 hover:bg-gray-200'
+                signupType === "recipient"
+                  ? "bg-white shadow-md text-emerald-600 scale-105"
+                  : "text-gray-600 hover:bg-gray-200"
               }`}
             >
               Recipient
@@ -107,7 +103,6 @@ const SignupForm = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Common Fields */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Full Name
@@ -150,146 +145,32 @@ const SignupForm = () => {
               />
             </div>
 
-            {/* Donor Specific Fields */}
-            {signupType === 'donor' && (
-              <>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Account Type
-                  </label>
-                  <select
-                    name="accountType"
-                    value={formData.accountType || ''}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2.5 border-2 rounded-lg"
-                  >
-                    <option value="">Select Account Type</option>
-                    <option value="individual">Individual</option>
-                    <option value="restaurant">Restaurant</option>
-                    <option value="grocery">Grocery Store</option>
-                    <option value="other">Other</option>
-                  </select>
-                  {formData.accountType === 'other' && (
-                    <input
-                      type="text"
-                      name="otherAccountType"
-                      value={formData.otherAccountType || ''}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-2.5 border-2 rounded-lg mt-2"
-                      placeholder="Specify Account Type"
-                    />
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Dietary Restrictions (if donating prepared food)
-                  </label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {DietaryOptions.map(option => (
-                      <label key={option} className="inline-flex items-center">
-                        <input
-                          type="checkbox"
-                          name="dietaryRestrictions"
-                          value={option}
-                          onChange={handleCheckboxChange}
-                          className="form-checkbox"
-                        />
-                        <span className="ml-2">{option}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              </>
-            )}
-
-            {/* Recipient Specific Fields */}
-            {signupType === 'recipient' && (
-              <>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Organization Name
-                  </label>
-                  <input
-                    type="text"
-                    name="organizationName"
-                    value={formData.organizationName || ''}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2.5 border-2 rounded-lg"
-                    placeholder="Enter organization name"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Organization Type
-                  </label>
-                  <select
-                    name="organizationType"
-                    value={formData.organizationType || ''}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2.5 border-2 rounded-lg"
-                  >
-                    <option value="">Select Organization Type</option>
-                    <option value="food-bank">Food Bank</option>
-                    <option value="soup-kitchen">Soup Kitchen</option>
-                    <option value="shelter">Shelter</option>
-                    <option value="community-center">Community Center</option>
-                    <option value="other">Other</option>
-                  </select>
-                  {formData.organizationType === 'other' && (
-                    <input
-                      type="text"
-                      name="otherOrganizationType"
-                      value={formData.otherOrganizationType || ''}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-2.5 border-2 rounded-lg mt-2"
-                      placeholder="Specify Organization Type"
-                    />
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Recipient Dietary Needs
-                  </label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {DietaryOptions.map(option => (
-                      <label key={option} className="inline-flex items-center">
-                        <input
-                          type="checkbox"
-                          name="recipientDietaryNeeds"
-                          value={option}
-                          onChange={handleCheckboxChange}
-                          className="form-checkbox"
-                        />
-                        <span className="ml-2">{option}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              </>
-            )}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Password
+              </label>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2.5 border-2 rounded-lg"
+                placeholder="Enter your password"
+              />
+            </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Preferred Contact Method
+                Location
               </label>
-              <div className="grid grid-cols-3 gap-2">
-                {(['email', 'phone', 'in-app']).map(method => (
-                  <label key={method} className="inline-flex items-center">
-                    <input
-                      type="radio"
-                      name="contactMethod"
-                      value={method}
-                      checked={formData.contactMethod === method}
-                      onChange={handleInputChange}
-                      className="form-radio"
-                    />
-                    <span className="ml-2">{method.replace('-', ' ')}</span>
-                  </label>
-                ))}
-              </div>
+              <input
+                type="text"
+                name="location"
+                value={formData.location}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2.5 border-2 rounded-lg"
+                placeholder="Enter your location"
+              />
             </div>
 
             <button

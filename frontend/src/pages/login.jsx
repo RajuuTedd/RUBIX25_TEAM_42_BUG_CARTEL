@@ -1,19 +1,46 @@
 import React, { useState } from 'react';
-import { 
-  LockClosedIcon, 
-  MailIcon, 
-  UserIcon 
-} from '@heroicons/react/outline';
+import { useNavigate } from 'react-router-dom';
+// import { 
+//   LockClosedIcon, 
+//   MailIcon, 
+//   UserIcon 
+// } from '@heroicons/react';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
-
-  const handleSubmit = (e) => {
+  const navigate=useNavigate()
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login attempted', { email, password, rememberMe });
+  
+    try {
+      const response = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(data.error || "Something went wrong");
+      }
+  
+      console.log("Login successful", data);
+  
+      // Save token to localStorage or use it as needed
+      localStorage.setItem("token", data.token);
+      // Optionally redirect the user
+      navigate("/dashboard");
+    } catch (err) {
+      console.error("Login failed:", err.message);
+      alert(err.message);
+    }
   };
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-teal-100 p-4">
@@ -23,7 +50,7 @@ const LoginPage = () => {
         {/* Header */}
         <div className="text-center">
           <h1 className="text-3xl font-bold text-emerald-600 flex items-center justify-center gap-2 mb-2">
-            <UserIcon className="h-8 w-8" />
+            {/* <UserIcon className="h-8 w-8" /> */}
             Food Fire-brigade
           </h1>
           <p className="text-gray-500">Rescuing Food, Feeding Hope</p>
@@ -40,10 +67,10 @@ const LoginPage = () => {
               Email Address
             </label>
             <div className="relative">
-              <MailIcon 
+              {/* <MailIcon 
                 className="absolute left-3 top-1/2 transform -translate-y-1/2 
                   h-5 w-5 text-gray-400" 
-              />
+              /> */}
               <input
                 type="email"
                 id="email"
@@ -67,10 +94,10 @@ const LoginPage = () => {
               Password
             </label>
             <div className="relative">
-              <LockClosedIcon 
+              {/* <LockClosedIcon 
                 className="absolute left-3 top-1/2 transform -translate-y-1/2 
                   h-5 w-5 text-gray-400" 
-              />
+              /> */}
               <input
                 type="password"
                 id="password"
@@ -123,7 +150,7 @@ const LoginPage = () => {
               transition-all duration-300 transform hover:scale-[1.01] 
               flex items-center justify-center gap-2"
           >
-            <LockClosedIcon className="h-5 w-5" />
+            {/* <LockClosedIcon className="h-5 w-5" /> */}
             Sign In
           </button>
         </form>
